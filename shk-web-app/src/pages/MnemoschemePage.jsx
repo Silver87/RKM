@@ -1,17 +1,16 @@
 import { useState } from 'react';
+import { Droplets, Wind, Thermometer, Wrench, LayoutDashboard } from 'lucide-react';
 
 export default function MnemoschemePage() {
   const [activeTab, setActiveTab] = useState('site');
-  
+
   const tabs = [
-    { id: 'site', label: 'Участок', image: 'screen_22.png' },
-    { id: 'hydraulic', label: 'Гидросистема', image: 'screen_23.png' },
-    { id: 'lubrication', label: 'Смазка', image: 'screen_25.png' },
-    { id: 'cooling', label: 'Охлаждение', image: 'screen_27.png' },
-    { id: 'manipulator', label: 'Манипулятор', image: 'screen_37.png' },
+    { id: 'site', label: 'Участок', icon: LayoutDashboard },
+    { id: 'hydraulic', label: 'Гидросистема', icon: Droplets },
+    { id: 'lubrication', label: 'Смазка', icon: Wind },
+    { id: 'cooling', label: 'Охлаждение', icon: Thermometer },
+    { id: 'manipulator', label: 'Манипулятор', icon: Wrench },
   ];
-  
-  const activeImage = tabs.find(t => t.id === activeTab)?.image;
 
   return (
     <div className="page-container">
@@ -25,13 +24,22 @@ export default function MnemoschemePage() {
               className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
+              <tab.icon size={18} style={{ marginRight: '8px' }} />
               {tab.label}
             </button>
           ))}
         </div>
         
         <div className="mnemoscheme-view">
-          <img src={`/images/manual_screens/${activeImage}`} alt={tabs.find(t => t.id === activeTab)?.label} style={{ maxWidth: '100%', height: 'auto' }} />
+          <div className="mnemoscheme-placeholder">
+            <LayoutDashboard size={80} />
+            <p style={{ marginTop: '15px', fontSize: '16px' }}>
+              Мнемосхема: {tabs.find(t => t.id === activeTab)?.label}
+            </p>
+            <p style={{ color: '#666', marginTop: '10px' }}>
+              Здесь будет отображаться графическая схема оборудования
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,19 +1,32 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  GitGraph, 
+  Droplets, 
+  Wind, 
+  Thermometer, 
+  Settings, 
+  AlertTriangle,
+  Network,
+  FileText,
+  Wrench,
+  LogOut,
+  User
+} from 'lucide-react';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import MnemoschemePage from './pages/MnemoschemePage';
 import ProgramsPage from './pages/ProgramsPage';
 import MessagesPage from './pages/MessagesPage';
 import SettingsPage from './pages/SettingsPage';
-import ProfinetPage from './pages/ProfinetPage';
-import DiagnosticsPage from './pages/DiagnosticsPage';
+import PlaceholderPage from './pages/PlaceholderPage';
 
 function AppContent({ user, onLogout }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
-  
+
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -30,6 +43,14 @@ function AppContent({ user, onLogout }) {
     });
   };
 
+  const navItems = [
+    { path: '/', icon: LayoutDashboard, label: 'Главная' },
+    { path: '/mnemoscheme', icon: LayoutDashboard, label: 'Мнемосхемы' },
+    { path: '/programs', icon: GitGraph, label: 'Программы' },
+    { path: '/messages', icon: AlertTriangle, label: 'Сообщения' },
+    { path: '/settings', icon: Settings, label: 'Настройки' },
+  ];
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -43,13 +64,14 @@ function AppContent({ user, onLogout }) {
             <span>Система в норме</span>
           </div>
           <div className="user-info">
+            <User size={18} />
             <span>{user?.username || 'Оператор'}</span>
           </div>
           <button 
             onClick={onLogout}
-            className="logout-button"
+            style={{ background: 'transparent', border: 'none', color: '#ddd', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}
           >
-            Выход
+            <LogOut size={18} />
           </button>
         </div>
       </header>
@@ -58,80 +80,52 @@ function AppContent({ user, onLogout }) {
         <nav className="sidebar">
           <div className="nav-section">
             <div className="nav-section-title">Навигация</div>
-            <button
-              className={`nav-button ${location.pathname === '/' ? 'active' : ''}`}
-              onClick={() => navigate('/')}
-            >
-              Главная
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/mnemoscheme' ? 'active' : ''}`}
-              onClick={() => navigate('/mnemoscheme')}
-            >
-              Мнемосхемы
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/programs' ? 'active' : ''}`}
-              onClick={() => navigate('/programs')}
-            >
-              Программы
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/messages' ? 'active' : ''}`}
-              onClick={() => navigate('/messages')}
-            >
-              Сообщения
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/settings' ? 'active' : ''}`}
-              onClick={() => navigate('/settings')}
-            >
-              Настройки
-            </button>
+            {navItems.map((item) => (
+              <button
+                key={item.path}
+                className={`nav-button ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <item.icon size={20} />
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
           
           <div className="nav-section">
             <div className="nav-section-title">Системы</div>
-            <button
-              className={`nav-button ${location.pathname === '/mnemoscheme/hydraulic' ? 'active' : ''}`}
-              onClick={() => navigate('/mnemoscheme/hydraulic')}
-            >
-              Гидросистема
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/mnemoscheme/lubrication' ? 'active' : ''}`}
-              onClick={() => navigate('/mnemoscheme/lubrication')}
-            >
-              Смазка
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/mnemoscheme/cooling' ? 'active' : ''}`}
-              onClick={() => navigate('/mnemoscheme/cooling')}
-            >
-              Охлаждение
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/mnemoscheme/manipulator' ? 'active' : ''}`}
-              onClick={() => navigate('/mnemoscheme/manipulator')}
-            >
-              Манипулятор
-            </button>
+            {[
+              { path: '/mnemoscheme/hydraulic', icon: Droplets, label: 'Гидросистема' },
+              { path: '/mnemoscheme/lubrication', icon: Wind, label: 'Смазка' },
+              { path: '/mnemoscheme/cooling', icon: Thermometer, label: 'Охлаждение' },
+              { path: '/mnemoscheme/manipulator', icon: Wrench, label: 'Манипулятор' },
+            ].map((item) => (
+              <button
+                key={item.path}
+                className={`nav-button ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <item.icon size={20} />
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
 
           <div className="nav-section">
             <div className="nav-section-title">Диагностика</div>
-            <button
-              className={`nav-button ${location.pathname === '/profinet' ? 'active' : ''}`}
-              onClick={() => navigate('/profinet')}
-            >
-              Profinet
-            </button>
-            <button
-              className={`nav-button ${location.pathname === '/diagnostics' ? 'active' : ''}`}
-              onClick={() => navigate('/diagnostics')}
-            >
-              Диагностика
-            </button>
+            {[
+              { path: '/profinet', icon: Network, label: 'Profinet' },
+              { path: '/diagnostics', icon: FileText, label: 'Диагностика' },
+            ].map((item) => (
+              <button
+                key={item.path}
+                className={`nav-button ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <item.icon size={20} />
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
         </nav>
 
@@ -143,8 +137,8 @@ function AppContent({ user, onLogout }) {
             <Route path="/programs" element={<ProgramsPage />} />
             <Route path="/messages" element={<MessagesPage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/profinet" element={<ProfinetPage />} />
-            <Route path="/diagnostics" element={<DiagnosticsPage />} />
+            <Route path="/profinet" element={<PlaceholderPage title="Сеть Profinet" />} />
+            <Route path="/diagnostics" element={<PlaceholderPage title="Диагностика" />} />
           </Routes>
         </main>
       </div>
